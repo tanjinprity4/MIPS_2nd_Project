@@ -90,6 +90,13 @@ char_lower:
 	addi $t2, $t2, 1  #  increment for valid character count
 	bne $t2, 1, check_prev
 	li $t4, 1
+	j loop
+
+check_prev:
+	beq $t4, 0, space_between_valid_chars  #  space found between valid chars (ex. "A B")
+	j loop
+
+
 	
 exit:
 	li $v0, 10                  # system call code for exit = 10
