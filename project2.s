@@ -49,7 +49,11 @@ loop:
 	slti $t1, $a0, 123
 	bne $t1, $zero, char_lower
 	j loop
-
+space:
+	beq $t2, 0, loop
+	beq $t4, 1, space_after_valid_char
+	beq $t4, 0, increase_space_count
+	j loop
 exit:
 	li $v0, 10                  # system call code for exit = 10
 	syscall
