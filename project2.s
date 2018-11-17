@@ -117,6 +117,15 @@ conversion:
 	li $a3, 4  #  Max possible length of a valid char array
 	li $t8, 0  #  initializing to get the final conversion sum
 
+    move $t0, $t7  #  move the string again to $t0 for fresh calculation
+
+    beq $t2, 0, empty  #  string has all spaces
+
+    slti $t1, $t2, 5  #  check for more than 4 characters
+    beq $t1, $zero, is_long  #  too long to handle
+
+    beq $s0, -1, invalid  #  if spaces between valid chars of required length
+
 
 
 	
