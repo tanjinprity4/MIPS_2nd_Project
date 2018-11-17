@@ -158,6 +158,15 @@ actual_conversion_loop:
 
     j actual_conversion_loop
 
+digit_conversion:
+    addi $a0, $a0, -48  #  conversion of ascii value to base-35
+    mult $a0, $a2  # [bit_value * 35^n]
+    mflo $t9
+    add $t8, $t8, $t9  #  adding the sum for each bit multiplication
+    div $a2, $a1
+    mflo $a2  #  [35^(n-1) = (35^n)/35]
+    j actual_conversion_loop
+
 
 	
 exit:
