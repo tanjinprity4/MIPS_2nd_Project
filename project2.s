@@ -125,6 +125,12 @@ conversion:
     beq $t1, $zero, is_long  #  too long to handle
 
     beq $s0, -1, invalid  #  if spaces between valid chars of required length
+    slti $t1, $s1, 4  #  check if padding of the input is required
+    bne $t1, $zero, padding
+
+actual_conversion_loop:
+    lb $a0, 0($t0)
+    beq $a0, 10, print_value # last char is line feed ($a0 = 10) so exit the loop and start conversion
 
 
 
