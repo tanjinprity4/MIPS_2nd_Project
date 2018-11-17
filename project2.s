@@ -131,6 +131,15 @@ conversion:
 actual_conversion_loop:
     lb $a0, 0($t0)
     beq $a0, 10, print_value # last char is line feed ($a0 = 10) so exit the loop and start conversion
+    addi $t0, $t0, 1  #  shifing the marker to the right by one byte
+
+    slti $t1, $a0, 123 # if $a0 < 123 ($a0 = [0, 122]) ->  $t1 = 1, else $t0 = 0 ($a0 = [123, 127])
+    beq $t1, $zero, invalid
+
+    beq $a0, 32, actual_conversion_loop  #  skip the space char
+
+    slti $t1, $a0, 48  # if $a0 < 48 ($a0 = [0, 47] - 32) -> $t1 = 1, else $t0 = 0 ($a0 = [48, 122])
+    bne $t1, $zero, invalid
 
 
 
