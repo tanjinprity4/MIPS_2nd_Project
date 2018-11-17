@@ -103,6 +103,12 @@ space_between_valid_chars:
 	li $t4, 1  #  Space between valid chars found
 	j loop
 
+invalid:
+
+	li $v0, 4  #  system call code for printing string = 4
+	la $a0, invalid
+	syscall
+	j exit
 
 
 	
