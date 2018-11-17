@@ -23,6 +23,9 @@ empty:
 	syscall
 	j exit
 	
+	li $t2, 0		#$t2 will be used for length of characters
+	li $t4, -10		
+	li $t3, 0		#$t3 will count space
 exit:
 	li $v0, 10                  # system call code for exit = 10
 	syscall
