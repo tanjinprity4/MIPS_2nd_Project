@@ -12,5 +12,10 @@ main:
 	move $t0, $a0  #  move user input to $t0
 	move $t7, $a0  #  move user input in another register, $t7 for later
 	
+check_if_empty:
+	lb $a0, 0($t0)
+	beq $a0, 10, empty
+	j loop
+
 	li $v0, 10                  # system call code for exit = 10
 	syscall
