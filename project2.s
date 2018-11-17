@@ -71,6 +71,11 @@ char_invalid:
 	li $t4, 1  # only set if first valid char is seen
 	j loop
 	
+char_digit:
+	addi $s1, $s1, 1  #  increment for valid character count
+	addi $t2, $t2, 1  #  increment for character count
+	
+	
 exit:
 	li $v0, 10                  # system call code for exit = 10
 	syscall
