@@ -1,8 +1,8 @@
 .data
 	userInput: .space 10000
-	empty: .asciiz "Input is empty."
-	invalid: .asciiz "Invalid base-36 number."
-	long: .asciiz "Input is too long."
+	empty_string: .asciiz "Input is empty."
+	invalid_string: .asciiz "Invalid base-36 number."
+	long_string: .asciiz "Input is too long."
 .text                           # Assembly language instructions
 main:
 	li $v0, 8  #  Taking in input
@@ -19,7 +19,7 @@ check_if_empty:
 	
 empty:
 	li $v0, 4  		# for printing string
-	la $a0, empty  		
+	la $a0, empty_string  		
 	syscall
 	j exit
 	
@@ -106,7 +106,7 @@ space_between_valid_chars:
 invalid:
 
 	li $v0, 4  
-	la $a0, invalid
+	la $a0, invalid_string
 	syscall
 	j exit
 
@@ -195,7 +195,7 @@ padding_loop:
 
 is_long:
     li $v0, 4  
-    la $a0, long  
+    la $a0, long_string  
     syscall
     j exit 
 
