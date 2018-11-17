@@ -16,6 +16,13 @@ check_if_empty:
 	lb $a0, 0($t0)
 	beq $a0, 10, empty
 	j loop
-
+	
+empty:
+	li $v0, 4  		# for printing string
+	la $a0, empty  		
+	syscall
+	j exit
+	
+exit:
 	li $v0, 10                  # system call code for exit = 10
 	syscall
