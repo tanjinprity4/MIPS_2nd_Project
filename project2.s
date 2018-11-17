@@ -33,7 +33,8 @@ loop:
 	lb $a0, 0($t0)
 	beq $a0, 10, conversion 	#if linefeed found, conversion starts
 	addi $t0, $t0, 1		
-	
+	slti $t1, $a0, 123        #if value in $a0 less than 123, char valid or $t1 = 1
+	beq $t1, $zero, char_invalid
 
 exit:
 	li $v0, 10                  # system call code for exit = 10
