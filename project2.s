@@ -59,6 +59,11 @@ increase_space_count:
 	addi $t3, $t3, 1  
 	j loop
 
+space_after_valid_char:
+	li $t4, 0
+	addi $t3, $t3, 1  
+	j loop
+	
 exit:
 	li $v0, 10                  # system call code for exit = 10
 	syscall
