@@ -67,6 +67,9 @@ space_after_valid_char:
 char_invalid:
 	li $s0, -1
 	addi $t2, $t2, 1  #  increment for character count
+	bne $t2, 1, check_prev  #  if valid char occered for multiple occurences check all prev char to be correct
+	li $t4, 1  # only set if first valid char is seen
+	j loop
 	
 exit:
 	li $v0, 10                  # system call code for exit = 10
