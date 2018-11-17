@@ -35,6 +35,9 @@ loop:
 	addi $t0, $t0, 1		
 	slti $t1, $a0, 123        #if value in $a0 less than 123, char valid or $t1 = 1
 	beq $t1, $zero, char_invalid
+	beq $a0, 32, space
+	slti $t1, $a0, 48
+	bne $t1, $zero, char_invalid
 
 exit:
 	li $v0, 10                  # system call code for exit = 10
