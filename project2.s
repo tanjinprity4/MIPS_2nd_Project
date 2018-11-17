@@ -42,6 +42,10 @@ loop:
 	bne $t1, $zero, char_digit
 	slti $t1, $a0, 65
 	bne $t1, $zero, char_invalid
+	slti $t1, $a0, 91 
+	bne $t1, $zero, char_upper
+	slti $t1, $a0, 97 
+	bne $t1, $zero, char_invalid
 exit:
 	li $v0, 10                  # system call code for exit = 10
 	syscall
