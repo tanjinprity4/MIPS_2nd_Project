@@ -38,7 +38,10 @@ loop:
 	beq $a0, 32, space
 	slti $t1, $a0, 48
 	bne $t1, $zero, char_invalid
-
+	slti $t1, $a0, 58
+	bne $t1, $zero, char_digit
+	slti $t1, $a0, 65
+	bne $t1, $zero, char_invalid
 exit:
 	li $v0, 10                  # system call code for exit = 10
 	syscall
