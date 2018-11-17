@@ -200,6 +200,11 @@ is_long:
     syscall
     j exit  #  exit since it is too long
 
+print_value:
+    li $v0, 1  # to print the intezer
+    addi $a0, $t8, 0  # print the actual sum
+    syscall
+
 	
 exit:
 	li $v0, 10                  # system call code for exit = 10
