@@ -64,6 +64,10 @@ space_after_valid_char:
 	addi $t3, $t3, 1  
 	j loop
 	
+char_invalid:
+	li $s0, -1
+	addi $t2, $t2, 1  #  increment for character count
+	
 exit:
 	li $v0, 10                  # system call code for exit = 10
 	syscall
