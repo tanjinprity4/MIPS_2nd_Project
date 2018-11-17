@@ -54,6 +54,11 @@ space:
 	beq $t4, 1, space_after_valid_char
 	beq $t4, 0, increase_space_count
 	j loop
+	
+increase_space_count:
+	addi $t3, $t3, 1  
+	j loop
+
 exit:
 	li $v0, 10                  # system call code for exit = 10
 	syscall
