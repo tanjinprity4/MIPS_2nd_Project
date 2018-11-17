@@ -28,6 +28,13 @@ empty:
 	li $t3, 0		#$t3 will count space
 	li $s0, -1 		# check if valid
 	li $s1, 0  		# total valid characters
+	
+loop:
+	lb $a0, 0($t0)
+	beq $a0, 10, conversion 	#if linefeed found, conversion starts
+	addi $t0, $t0, 1		
+	
+
 exit:
 	li $v0, 10                  # system call code for exit = 10
 	syscall
