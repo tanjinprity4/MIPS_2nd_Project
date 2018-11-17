@@ -66,127 +66,126 @@ space_after_valid_char:
 	
 char_invalid:
 	li $s0, -1
-	addi $t2, $t2, 1  #  increment for character count
-	bne $t2, 1, check_prev  #  if valid char occered for multiple occurences check all prev char to be correct
-	li $t4, 1  # only set if first valid char is seen
+	addi $t2, $t2, 1  
+	bne $t2, 1, check_prev 
+	li $t4, 1 
 	j loop
 	
 char_digit:
-	addi $s1, $s1, 1  #  increment for valid character count
-	addi $t2, $t2, 1  #  increment for character count
-	bne $t2, 1, check_prev  #  if valid char occered for multiple occurences check all prev char to be correct
-	li $t4, 1  # only set if first valid char is seen
+	addi $s1, $s1, 1  
+	addi $t2, $t2, 1  
+	bne $t2, 1, check_prev 
+	li $t4, 1 
 	j loop
 	
 char_upper:
-	addi $s1, $s1, 1  #  increment for valid character count
-	addi $t2, $t2, 1  #  increment for valid character count
+	addi $s1, $s1, 1  
+	addi $t2, $t2, 1  
 	bne $t2, 1, check_prev
 	li $t4, 1
 	j loop
 
 char_lower:
-	addi $s1, $s1, 1  #  increment for valid character count
-	addi $t2, $t2, 1  #  increment for valid character count
+	addi $s1, $s1, 1  
+	addi $t2, $t2, 1  
 	bne $t2, 1, check_prev
 	li $t4, 1
 	j loop
 
 check_prev:
-	beq $t4, 0, space_between_valid_chars  #  space found between valid chars (ex. "A B")
+	beq $t4, 0, space_between_valid_chars 
 	j loop
 
 space_between_valid_chars:
 	li $s0, -1
-	add $t2, $t2, $t3  # length = length + number_of_spaces
-	li $t3, 0  #  set space count back to 0
-	li $t4, 1  #  Space between valid chars found
+	add $t2, $t2, $t3 
+	li $t3, 0  
+	li $t4, 1  
 	j loop
 
 invalid:
 
-	li $v0, 4  #  system call code for printing string = 4
+	li $v0, 4  
 	la $a0, invalid
 	syscall
 	j exit
 
 conversion:
 
-	li $a1, 36  #  loading the base
-	li $a2, 46656  #  (base^3) -> Highest possible value for Most significant bit (MSB) if MSB is 1
-	li $a3, 4  #  Max possible length of a valid char array
-	li $t8, 0  #  initializing to get the final conversion sum
+	li $a1, 36 
+	li $a2, 46656  
+	li $a3, 4  
+	li $t8, 0 
 
-    move $t0, $t7  #  move the string again to $t0 for fresh calculation
+    move $t0, $t7  
+    beq $t2, 0, empty  
 
-    beq $t2, 0, empty  #  string has all spaces
+    slti $t1, $t2, 5  
+    beq $t1, $zero, is_long  
 
-    slti $t1, $t2, 5  #  check for more than 4 characters
-    beq $t1, $zero, is_long  #  too long to handle
-
-    beq $s0, -1, invalid  #  if spaces between valid chars of required length
-    slti $t1, $s1, 4  #  check if padding of the input is required
+    beq $s0, -1, invalid 
+    slti $t1, $s1, 4 
     bne $t1, $zero, padding
 
 actual_conversion_loop:
     lb $a0, 0($t0)
-    beq $a0, 10, print_value # last char is line feed ($a0 = 10) so exit the loop and start conversion
-    addi $t0, $t0, 1  #  shifing the marker to the right by one byte
+    beq $a0, 10, print_value 
+    addi $t0, $t0, 1  
 
-    slti $t1, $a0, 123 # if $a0 < 123 ($a0 = [0, 122]) ->  $t1 = 1, else $t0 = 0 ($a0 = [123, 127])
+    slti $t1, $a0, 123 
     beq $t1, $zero, invalid
 
-    beq $a0, 32, actual_conversion_loop  #  skip the space char
+    beq $a0, 32, actual_conversion_loop 
 
-    slti $t1, $a0, 48  # if $a0 < 48 ($a0 = [0, 47] - 32) -> $t1 = 1, else $t0 = 0 ($a0 = [48, 122])
+    slti $t1, $a0, 48  
     bne $t1, $zero, invalid
 
-    slti $t1, $a0, 58  #  if $a0 < 58 ($a0 = [48, 57]) -> $t1 = 1, else $t0 = 0 ($a0 = [58, 122])
+    slti $t1, $a0, 58  
     bne $t1, $zero, digit_conversion
 
-    slti $t1, $a0, 65  #  if  $a0 < 65 ($a0 = [58, 64]) -> $t1 = 1, else $t0 = 0 ($a0 = [65, 122])
+    slti $t1, $a0, 65 
     bne $t1, $zero, invalid
 
-    slti $t1, $a0, 91  #  if $a0 < 91 ($a0 = [65, 90]) -> $t1 = 1, else $t0 = 0 ($a0 = [91, 122])
+    slti $t1, $a0, 91  
     bne $t1, $zero, upper_conversion
 
-    slti $t1, $a0, 97  #  if $a0 < 97 ($a0 = [90, 96]) -> $t1 = 1, else $t0 = 0 ($a0 = [97, 122])
+    slti $t1, $a0, 97  
     bne $t1, $zero, invalid
 
-    slti $t1, $a0, 123  #if $a0 < 122 (#a0 = [97, 121]) -> $t1 = 1, else $t0 = 0 but max possible $a0 = 122, so 'else' not possible
+    slti $t1, $a0, 123 
     bne $t1, $zero, lower_conversion
 
     j actual_conversion_loop
 
 digit_conversion:
-    addi $a0, $a0, -48  #  conversion of ascii value to base-35
-    mult $a0, $a2  # [bit_value * 35^n]
+    addi $a0, $a0, -48 
+    mult $a0, $a2  
     mflo $t9
-    add $t8, $t8, $t9  #  adding the sum for each bit multiplication
+    add $t8, $t8, $t9  
     div $a2, $a1
-    mflo $a2  #  [35^(n-1) = (35^n)/35]
+    mflo $a2 
     j actual_conversion_loop
 
 upper_conversion:
     addi $a0, $a0, -55
-    mult $a0, $a2  # [bit_value * 35^n]
+    mult $a0, $a2 
     mflo $t9
-    add $t8, $t8, $t9  #  adding the sum for each bit multiplication
+    add $t8, $t8, $t9  
     div $a2, $a1
-    mflo $a2  #  [35^(n-1) = (35^n)/35]
+    mflo $a2 
     j actual_conversion_loop
 
 lower_conversion:
     addi $a0, $a0, -87
-    mult $a0, $a2  # [bit_value * 35^n]
+    mult $a0, $a2  
     mflo $t9
-    add $t8, $t8, $t9  #  adding the sum for each bit multiplication
+    add $t8, $t8, $t9  
     div $a2, $a1
-    mflo $a2  #  [35^(n-1) = (35^n)/35]
+    mflo $a2  
     j actual_conversion_loop
 
 padding:
-    sub $t5, $a3, $s1  # difference between ideal and input string (valid) lengths
+    sub $t5, $a3, $s1  
 padding_loop:
     beq $t5, 0, actual_conversion_loop
     addi $t5, $t5, -1
@@ -195,17 +194,17 @@ padding_loop:
     j padding_loop
 
 is_long:
-    li $v0, 4  #  system call code for printing string = 4
-    la $a0, long  # load address of string to be printed into $a0
+    li $v0, 4  
+    la $a0, long  
     syscall
-    j exit  #  exit since it is too long
+    j exit 
 
 print_value:
-    li $v0, 1  # to print the intezer
-    addi $a0, $t8, 0  # print the actual sum
+    li $v0, 1  
+    addi $a0, $t8, 0  
     syscall
 
 	
 exit:
-	li $v0, 10                  # system call code for exit = 10
+	li $v0, 10                  
 	syscall
