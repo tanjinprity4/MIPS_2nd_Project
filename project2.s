@@ -176,6 +176,15 @@ upper_conversion:
     mflo $a2  #  [35^(n-1) = (35^n)/35]
     j actual_conversion_loop
 
+lower_conversion:
+    addi $a0, $a0, -87
+    mult $a0, $a2  # [bit_value * 35^n]
+    mflo $t9
+    add $t8, $t8, $t9  #  adding the sum for each bit multiplication
+    div $a2, $a1
+    mflo $a2  #  [35^(n-1) = (35^n)/35]
+    j actual_conversion_loop
+
 	
 exit:
 	li $v0, 10                  # system call code for exit = 10
