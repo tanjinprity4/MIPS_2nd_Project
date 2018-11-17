@@ -96,6 +96,14 @@ check_prev:
 	beq $t4, 0, space_between_valid_chars  #  space found between valid chars (ex. "A B")
 	j loop
 
+space_between_valid_chars:
+	li $s0, -1
+	add $t2, $t2, $t3  # length = length + number_of_spaces
+	li $t3, 0  #  set space count back to 0
+	li $t4, 1  #  Space between valid chars found
+	j loop
+
+
 
 	
 exit:
