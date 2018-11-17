@@ -185,6 +185,15 @@ lower_conversion:
     mflo $a2  #  [35^(n-1) = (35^n)/35]
     j actual_conversion_loop
 
+padding:
+    sub $t5, $a3, $s1  # difference between ideal and input string (valid) lengths
+padding_loop:
+    beq $t5, 0, actual_conversion_loop
+    addi $t5, $t5, -1
+    div $a2, $a1
+    mflo $a2
+    j padding_loop
+
 	
 exit:
 	li $v0, 10                  # system call code for exit = 10
